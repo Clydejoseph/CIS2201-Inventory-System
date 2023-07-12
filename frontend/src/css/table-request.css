@@ -1,0 +1,56 @@
+.req-table{
+    table-layout: fixed;
+    width: fit-content;
+    border: solid 2px black;
+}
+.req-head{
+    background-color: rgb(0, 0, 0);
+}
+.req-head th{
+    color: white;
+}
+.req-table td{
+    border-bottom: solid 1px black;
+}
+h2{
+    margin-bottom: 20px;
+}
+#req-header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding: 20px;
+    background-color: rgb(0, 27, 177);
+}
+h2{
+    color: white;
+    margin-top: 10px;
+}
+#item-table-modal{
+    border: solid 2px black;
+}
+#item-table-modal th{
+    border: solid 2px black;
+    text-align: center;
+    background-color: rgb(38, 38, 110);
+    color: white;
+}
+#item-table-modal td{
+    border: solid 2px black;
+}
+#td-unit{
+    width: 50px;
+}
+#td-item{
+    width: 200px;
+}
+#td-cost{
+    width: 100px;
+}
+#td-quantity{
+    width: 50px;
+}
+#td-amount{
+    width: 100px;
+}
