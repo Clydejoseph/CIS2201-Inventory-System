@@ -29,8 +29,65 @@ app.get('/asset', async function (req, res) {
     
   })
 
+
+
+  app.post('/asset-create', (req, res) => {
+    const item = req.body;
+  
+    connection.query(
+      "INSERT INTO item (name, description, brand, date_acquired, supplier, serial_no, asset_code, location, status, categoryID) VALUES (?,?,?,?,?,?,?,?,?,?)",
+      [
+        item.name,
+        item.description,
+        item.brand,
+        item.date_acquired,
+        item.supplier,
+        item.serial,
+        item.asset_code,
+        item.location,
+        item.status,
+        item.type,
+      ],
+      (error, result) => {
+        if (error) {
+          console.log(error);
+          return res.status(500).json({ error: 'Failed to insert data' });
+        }
+  
+        connection.query(
+          "SELECT CONCAT(c.category_code, '-', RIGHT(DATE_FORMAT(i.date_acquired, '%Y'),2), '-', LPAD(i.id, 3, '0')) AS asset_code FROM item i, category c WHERE i.categoryID = c.id ORDER BY i.id DESC LIMIT 1",
+          (error, results) => {
+            if (error) {
+              return res.status(500).json({ error: 'Failed to execute SELECT query' });
+            }
+  
+            if (results.length === 0) {
+              return res.status(404).json({ error: 'No data found' });
+            }
+  
+            const newAssetCode = results[0].asset_code;
+  
+            connection.query(
+              "UPDATE item SET asset_code = ? WHERE id = ?",
+              [newAssetCode, result.insertId],
+              (error, updateResult) => {
+                if (error) {
+                  console.log(error);
+                  return res.status(500).json({ error: 'Failed to update asset code' });
+                }
+  
+                return res.json({ item });
+              }
+            );
+          }
+        );
+      }
+    );
+  });
+
+  
+  
 app.post('/asset-update', (req, res) => {
-    console.log(req.body);
     res.json({ message: 'Data received successfully' });
   
     const item = req.body;

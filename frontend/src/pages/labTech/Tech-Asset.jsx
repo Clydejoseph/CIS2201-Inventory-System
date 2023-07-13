@@ -48,9 +48,9 @@ function CreateItem() {
         supplier: '',
         serial: '',
         location: '',
-        date: '',
+        date_acquired: '',
         status: 'New',
-        recipient: ''
+        asset_code: ''
       });
 
     const handleChange = (e) => {
@@ -105,10 +105,10 @@ function CreateItem() {
             <FormControl>
                 <FormLabel>Item Type</FormLabel>
                 <Select name='type' placeholder='select category' onChange={handleChange}>
-                    <option value="Mouse">Mouse</option>
-                    <option value="Keyboard">Keyboard</option>
-                    <option value="Monitor">Monitor</option>
-                    <option value="Tool">Tool</option>
+                    <option value="1">Mouse</option>
+                    <option value="2">Keyboard</option>
+                    <option value="3">Monitor</option>
+                    <option value="4">Tool</option>
                 </Select>
             </FormControl>
 
@@ -134,8 +134,8 @@ function CreateItem() {
             </FormControl>
 
             <FormControl>
-                <FormLabel>Date Aquired</FormLabel>
-                <Input  name='date'
+                <FormLabel>Date Acquired</FormLabel>
+                <Input  name='date_acquired'
                         onChange={handleChange}
                         size="md"
                         type="date" />
@@ -340,108 +340,7 @@ function UpdateItem({selected}) {
 export default function TechAsset(){
 
   const [data, setData] = useState([]);
-
-  const dataMock = [
-    {
-    'asset_code': "MSE-001", 
-    'name': "Mouse" ,
-    'brand': "Logitech Shroud" ,
-    'serial_no': "1234" ,
-    'date_aquired': "1234" ,
-    'location': "LB114" ,
-    'status': "active" ,
-  },
-    {
-    'asset_code': "MSE-002", 
-    'name': "Mouse" ,
-    'brand': "Logitech Shroud" ,
-    'serial_no': "1234" ,
-    'date_aquired': "1234" ,
-    'location': "LB114" ,
-    'status': "active" ,
-  },
-    {
-    'asset_code': "MSE-003", 
-    'name': "Mouse" ,
-    'brand': "Logitech Shroud" ,
-    'serial_no': "1234" ,
-    'date_aquired': "1234" ,
-    'location': "LB114" ,
-    'status': "active" ,
-  },
-    {
-    'asset_code': "MSE-004", 
-    'name': "Mouse" ,
-    'brand': "Logitech Shroud" ,
-    'serial_no': "1234" ,
-    'date_aquired': "1234" ,
-    'location': "LB114" ,
-    'status': "active" ,
-  },
-    {
-    'asset_code': "MSE-005", 
-    'name': "Mouse" ,
-    'brand': "Logitech Shroud" ,
-    'serial_no': "1234" ,
-    'date_aquired': "1234" ,
-    'location': "LB114" ,
-    'status': "active" ,
-  },
-    {
-    'asset_code': "MSE-006", 
-    'name': "Mouse" ,
-    'brand': "Logitech Shroud" ,
-    'serial_no': "1234" ,
-    'date_aquired': "1234" ,
-    'location': "LB114" ,
-    'status': "active" ,
-  },
-    {
-    'asset_code': "MSE-007", 
-    'name': "Mouse" ,
-    'brand': "Logitech Shroud" ,
-    'serial_no': "1234" ,
-    'date_aquired': "1234" ,
-    'location': "LB114" ,
-    'status': "active" ,
-  },
-    {
-    'asset_code': "MSE-008", 
-    'name': "Mouse" ,
-    'brand': "Logitech Shroud" ,
-    'serial_no': "1234" ,
-    'date_aquired': "1234" ,
-    'location': "LB114" ,
-    'status': "active" ,
-  },
-    {
-    'asset_code': "MSE-009", 
-    'name': "Mouse" ,
-    'brand': "Logitech Shroud" ,
-    'serial_no': "1234" ,
-    'date_aquired': "7-12-2023" ,
-    'location': "LB114" ,
-    'status': "active" ,
-  },
-    {
-    'asset_code': "MSE-010", 
-    'name': "Mouse" ,
-    'brand': "Logitech Shroud" ,
-    'serial_no': "1234" ,
-    'date_aquired': "1234" ,
-    'location': "LB114" ,
-    'status': "active" ,
-  },
-    {
-    'asset_code': "MSE-011", 
-    'name': "Mouse" ,
-    'brand': "Logitech Shroud" ,
-    'serial_no': "1234" ,
-    'date_aquired': "1234" ,
-    'location': "LB114" ,
-    'status': "active" ,
-  },
-]
+  const [searchItem ,setSearchItem] = useState('');
 
   useEffect(() => {
     // Fetch data from the SQL database
@@ -467,7 +366,6 @@ export default function TechAsset(){
   };
 
 
-
     return(
 
         <div className="tech-asset">
@@ -476,7 +374,7 @@ export default function TechAsset(){
             <Heading size='xl' color={'black'} fontFamily={'rubik'}>Equipment</Heading>
             <HStack>
                 <FormControl>
-                  <Input type='text'  placeholder='SEARCH' />
+                  <Input type='text'  placeholder='SEARCH' onChange={(e) =>{setSearchItem(e.target.value)}}/>
                 </FormControl>
                 <CreateItem />
             </HStack>
@@ -496,7 +394,32 @@ export default function TechAsset(){
                     </Tr>
                     </Thead>
                     <Tbody>
-                      {data.map((item , index ) => {
+                      {data.filter((srchVal) =>{
+                        if(searchItem == '' ){
+                          return srchVal;
+                        }
+                        else if(srchVal.asset_code.toLowerCase().includes(searchItem.toLowerCase())){
+                          return srchVal;
+                        }
+                        else if(srchVal.name.toLowerCase().includes(searchItem.toLowerCase())){
+                          return srchVal;
+                        }
+                        else if(srchVal.brand.toLowerCase().includes(searchItem.toLowerCase())){
+                          return srchVal;
+                        }
+                        else if(srchVal.serial_no.toLowerCase().includes(searchItem.toLowerCase())){
+                          return srchVal;
+                        }
+                        else if(srchVal.date_acquired.toLowerCase().includes(searchItem.toLowerCase())){
+                          return srchVal;
+                        }
+                        else if(srchVal.location.toLowerCase().includes(searchItem.toLowerCase())){
+                          return srchVal;
+                        }
+                        else if(srchVal.status.toLowerCase().includes(searchItem.toLowerCase())){
+                          return srchVal;
+                        }
+                      }).map((item , index ) => {
                         return(
                           <Tr key={index}>
                             <Td>{item.asset_code}</Td>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 11, 2023 at 12:14 PM
+-- Generation Time: Jul 13, 2023 at 03:32 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -39,8 +39,8 @@ CREATE TABLE `category` (
 --
 
 INSERT INTO `category` (`id`, `name`, `category_code`, `num`) VALUES
-(1, 'Mouse', 'MSE', 0),
-(2, 'Keyboard', 'KBD', 0),
+(1, 'Mouse', 'MOU', 0),
+(2, 'Keyboard', 'KEY', 0),
 (3, 'Monitor', 'MON', 0),
 (4, 'Tool', 'TOL', 0);
 
@@ -58,9 +58,9 @@ CREATE TABLE `item` (
   `date_acquired` date NOT NULL,
   `supplier` varchar(255) NOT NULL,
   `serial_no` char(18) NOT NULL,
-  `asset_code` char(7) NOT NULL,
+  `asset_code` char(10) NOT NULL,
   `location` varchar(255) NOT NULL,
-  `status` enum('Active','Defective','Dispose','Donate') NOT NULL,
+  `status` enum('New','Active','Defective','Dispose','Donate') NOT NULL,
   `recipient` varchar(255) NOT NULL,
   `categoryID` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -70,7 +70,70 @@ CREATE TABLE `item` (
 --
 
 INSERT INTO `item` (`id`, `name`, `description`, `brand`, `date_acquired`, `supplier`, `serial_no`, `asset_code`, `location`, `status`, `recipient`, `categoryID`) VALUES
-(1, 'Mouse', 'I changed the description!', 'Logitech Shroud', '2023-07-11', 'PlayTech', '1234', 'MSE-001', 'LB114', 'Active', '', 1);
+(1, 'Mouse', 'I changed the description!', 'Logitech Shroud', '2023-07-05', 'PlayTech', '1234', 'MSE-001', 'LB114', 'Defective', '', 1),
+(13, 'test', 'test', 'Logitech Shroud', '2023-07-22', 'PlayTech', '123TEST', 'KEY-23-013', 'LB457', 'New', '', 2);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `log`
+--
+
+CREATE TABLE `log` (
+  `id` bigint(20) NOT NULL,
+  `activity` text NOT NULL,
+  `date_done` date NOT NULL,
+  `userID` bigint(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `request`
+--
+
+CREATE TABLE `request` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `description` varchar(255) NOT NULL,
+  `type` enum('RIS','WRF') NOT NULL,
+  `quantity` int(11) NOT NULL,
+  `date_requested` date NOT NULL,
+  `date_needed` date DEFAULT NULL,
+  `status` enum('Pending','Approved','Denied') NOT NULL,
+  `unit` int(11) DEFAULT NULL,
+  `unit_cost` int(11) DEFAULT NULL,
+  `total_amount` int(11) DEFAULT NULL,
+  `payee` varchar(255) DEFAULT NULL,
+  `payment_instruction` text DEFAULT NULL,
+  `labor_cost` int(11) DEFAULT NULL,
+  `categoryID` int(11) NOT NULL,
+  `userID` bigint(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user`
+--
+
+CREATE TABLE `user` (
+  `id` bigint(20) NOT NULL,
+  `fname` varchar(255) NOT NULL,
+  `lname` varchar(255) NOT NULL,
+  `contact_no` char(11) NOT NULL,
+  `date_created` date NOT NULL,
+  `authority` enum('Tech','Head','Admin') NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `user`
+--
+
+INSERT INTO `user` (`id`, `fname`, `lname`, `contact_no`, `date_created`, `authority`, `email`, `password`) VALUES
+(1, 'admin', 'admin', '123', '2023-07-01', 'Tech', 'admin@gmail.com', 'admin');
 
 --
 -- Indexes for dumped tables
@@ -90,6 +153,27 @@ ALTER TABLE `item`
   ADD KEY `FK_category_id` (`categoryID`);
 
 --
+-- Indexes for table `log`
+--
+ALTER TABLE `log`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `FK_userID` (`userID`);
+
+--
+-- Indexes for table `request`
+--
+ALTER TABLE `request`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `FK_categoryID` (`categoryID`),
+  ADD KEY `FK_user_id` (`userID`);
+
+--
+-- Indexes for table `user`
+--
+ALTER TABLE `user`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -103,6 +187,24 @@ ALTER TABLE `category`
 -- AUTO_INCREMENT for table `item`
 --
 ALTER TABLE `item`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+
+--
+-- AUTO_INCREMENT for table `log`
+--
+ALTER TABLE `log`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `request`
+--
+ALTER TABLE `request`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `user`
+--
+ALTER TABLE `user`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
@@ -114,6 +216,19 @@ ALTER TABLE `item`
 --
 ALTER TABLE `item`
   ADD CONSTRAINT `FK_category_id` FOREIGN KEY (`categoryID`) REFERENCES `category` (`id`);
+
+--
+-- Constraints for table `log`
+--
+ALTER TABLE `log`
+  ADD CONSTRAINT `FK_userID` FOREIGN KEY (`userID`) REFERENCES `user` (`id`);
+
+--
+-- Constraints for table `request`
+--
+ALTER TABLE `request`
+  ADD CONSTRAINT `FK_categoryID` FOREIGN KEY (`categoryID`) REFERENCES `category` (`id`),
+  ADD CONSTRAINT `FK_user_id` FOREIGN KEY (`userID`) REFERENCES `user` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
