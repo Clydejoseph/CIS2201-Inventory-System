@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 13, 2023 at 03:32 PM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.2.4
+-- Generation Time: Jul 15, 2023 at 03:06 PM
+-- Server version: 10.4.27-MariaDB
+-- PHP Version: 8.2.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -71,7 +71,8 @@ CREATE TABLE `item` (
 
 INSERT INTO `item` (`id`, `name`, `description`, `brand`, `date_acquired`, `supplier`, `serial_no`, `asset_code`, `location`, `status`, `recipient`, `categoryID`) VALUES
 (1, 'Mouse', 'I changed the description!', 'Logitech Shroud', '2023-07-05', 'PlayTech', '1234', 'MSE-001', 'LB114', 'Defective', '', 1),
-(13, 'test', 'test', 'Logitech Shroud', '2023-07-22', 'PlayTech', '123TEST', 'KEY-23-013', 'LB457', 'New', '', 2);
+(13, 'test', 'test', 'Logitech Shroud', '2023-07-22', 'PlayTech', '123TEST', 'KEY-23-013', 'LB457', 'New', '', 2),
+(14, 'G102', 'it\'s a mouse', 'Logitech', '2020-02-07', 'Logitech supplier', 'ASDJ123', 'MOU-20-014', 'LB467', 'New', '', 1);
 
 -- --------------------------------------------------------
 
@@ -84,6 +85,19 @@ CREATE TABLE `log` (
   `activity` text NOT NULL,
   `date_done` date NOT NULL,
   `userID` bigint(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `report`
+--
+
+CREATE TABLE `report` (
+  `id` int(11) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `content` varchar(2000) NOT NULL,
+  `created_on` date NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -160,6 +174,12 @@ ALTER TABLE `log`
   ADD KEY `FK_userID` (`userID`);
 
 --
+-- Indexes for table `report`
+--
+ALTER TABLE `report`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `request`
 --
 ALTER TABLE `request`
@@ -187,13 +207,19 @@ ALTER TABLE `category`
 -- AUTO_INCREMENT for table `item`
 --
 ALTER TABLE `item`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `log`
 --
 ALTER TABLE `log`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `report`
+--
+ALTER TABLE `report`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `request`

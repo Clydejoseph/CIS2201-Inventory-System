@@ -53,6 +53,12 @@ h2{
 
 /* UPDATE TECH ASSET CSS*/
 
+
+hr {
+    margin-top: 1rem;
+    margin-bottom: 1.25rem;
+}
+
 .tech-asset{
     position: relative;
     display: flex;

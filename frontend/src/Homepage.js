@@ -8,7 +8,7 @@ import './css/homepage-style.css'
 
 
 // import Team from "./pages/Team";
-// import Report from "./pages/Report";
+import Report from "./pages/Report";
 // import Inventory from "./pages/Inventory";
 // import Dashboard from './pages/Dashboard';
 // import Room from './pages/Room';
@@ -43,6 +43,7 @@ function pageCont(){
                 <Route path="/admin-asset" element={<AdminAsset />}></Route>
                 <Route path="/admin-request" element={<AdminRequest />}></Route>
                 <Route path="/admin-account" element={<AdminAccount />}></Route>
+                <Route path="/report" element={<Report />}></Route>
                 <Route path="*" Component={wrongRoute}></Route>
           </Routes>
         </div>
