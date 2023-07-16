@@ -20,7 +20,7 @@ import TechNav from './component/navBars/Nav-LabTech';
 
 import HeadAsset from './pages/labHead/Head-Asset';
 import HeadRequest from './pages/labHead/Head-Request';
-import HeadLog from './pages/labHead/Head-Logs';
+import HeadLogs from './pages/labHead/Head-Logs';
 
 import AdminAccount from './pages/admin/Admin-Account';
 import AdminAsset from './pages/admin/Admin-Asset';
