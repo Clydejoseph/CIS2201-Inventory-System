@@ -24,7 +24,7 @@ export default function TechNav(){
                 </div>
                 <div className="profile">
                     <Heading as={'h5'} size={'sm'}>firstname lastname</Heading>
-                    <Text align={'center'}>laboratory Head</Text>
+                    <Text align={'center'}>Lab Technician</Text>
                 </div>
             </div>
             <Divider />
