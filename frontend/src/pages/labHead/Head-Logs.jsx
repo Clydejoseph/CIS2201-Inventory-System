@@ -6,66 +6,68 @@ import {
   Tr,
   Th,
   Td,
-  TableCaption,
   TableContainer,
-  Heading,
-  Button,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
-  FormControl,
-  FormLabel,
-  Input,
-  useDisclosure,
   VStack,
-  HStack,
-  Divider,
-  Textarea,
 } from "@chakra-ui/react";
-  import '../../css/table-asset.css'
+import axios from "axios";
 
-export default function HeadLog(){
-    return(
+export default function HeadLogs() {
+  const [data, setData] = useState([]);
 
-        <>
+  useEffect(() => {
+    // Fetch data from the SQL database
+    axios
+      .get("http://localhost:5000/logs/")
+      .then((response) => {
+        setData(response.data);
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
 
-            <div className='table-request'>
+  const formatDateString = (dateString) => {
+    if (!dateString) {
+      return "Invalid date";
+    }
 
+    const formattedDate = new Date(dateString);
+    return formattedDate.toLocaleDateString();
+  };
 
-            <VStack>
-            <HStack justify={'space-between'} width={'100%'} padding={'0px 8px 0px 8px'}>
-              <Heading size='xl' color={'black'} fontFamily={'rubik'}>Activity Log</Heading>
-              <HStack>
-              </HStack>
-            </HStack>
-
-
-            <TableContainer borderRadius={'10px'} width={'100%'} overflowY={'auto'} boxShadow={'xl'} height={'70vh'} >
-                <Table colorScheme='facebook'  variant='simple' >
-                    {/* <TableCaption>Imperial to metric conversion factors</TableCaption> */}
-
-                    <Thead>
-                    <Tr position={'sticky'} top={0} bgColor={'facebook.400'} zIndex={'1'}>
-                        <Th color={'white'}>Date</Th>
-                        <Th color={'white'}>User</Th>
-                        <Th color={'white'}>Activity</Th>
-                        <Th color={'white'}>Details</Th>
-                    </Tr>
-                    <Tr>
-                        <Td></Td>
-                        <Td></Td>
-                        <Td></Td>
-                        <Td><Button>Details</Button></Td>
-                    </Tr>
-                    </Thead>
-                </Table>
-            </TableContainer>
-            </VStack>
-            </div>
-        </>
-    )
+  return (
+    <div className="head-logs">
+      <VStack>
+        <TableContainer
+          borderRadius={"10px"}
+          width={"100%"}
+          overflowY={"auto"}
+          boxShadow={"xl"}
+          height={"70vh"}
+        >
+          <Table colorScheme={"facebook"} variant="simple">
+            <Thead>
+              <Tr position={"sticky"} top={0} bgColor={"facebook.400"} zIndex={"1"}>
+                <Th color={"white"}>ID</Th>
+                <Th color={"white"}>Activity</Th>
+                <Th color={"white"}>Date Done</Th>
+                <Th color={"white"}>User ID</Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {data.map((log) => (
+                <Tr key={log.id}>
+                  <Td>{log.id}</Td>
+                  <Td>{log.activity}</Td>
+                  <Td>{formatDateString(log.date_done)}</Td>
+                  <Td>{log.userID}</Td>
+                </Tr>
+              ))}
+            </Tbody>
+          </Table>
+        </TableContainer>
+      </VStack>
+    </div>
+  );
 }
