@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 15, 2023 at 03:06 PM
--- Server version: 10.4.27-MariaDB
--- PHP Version: 8.2.0
+-- Generation Time: Jul 17, 2023 at 12:03 PM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -70,9 +70,11 @@ CREATE TABLE `item` (
 --
 
 INSERT INTO `item` (`id`, `name`, `description`, `brand`, `date_acquired`, `supplier`, `serial_no`, `asset_code`, `location`, `status`, `recipient`, `categoryID`) VALUES
-(1, 'Mouse', 'I changed the description!', 'Logitech Shroud', '2023-07-05', 'PlayTech', '1234', 'MSE-001', 'LB114', 'Defective', '', 1),
+(1, 'test update with log4', 'I changed the description!', 'Logitech Shroud', '2023-07-05', 'PlayTech', '1234', 'MSE-001', 'LB114', 'Defective', '', 1),
 (13, 'test', 'test', 'Logitech Shroud', '2023-07-22', 'PlayTech', '123TEST', 'KEY-23-013', 'LB457', 'New', '', 2),
-(14, 'G102', 'it\'s a mouse', 'Logitech', '2020-02-07', 'Logitech supplier', 'ASDJ123', 'MOU-20-014', 'LB467', 'New', '', 1);
+(14, 'mouse', 'test', 'logitech', '2023-07-05', 'PlayTech', '7777', 'MOU-23-014', 'LB117', 'New', '', 1),
+(15, 'test with logs', 'test!', 'CDRking', '2023-07-21', 'PlayTech', '9909', 'MON-23-015', 'LB457', 'New', '', 3),
+(16, 'test with log2', 'test!', 'CDRking', '2023-07-11', 'PlayTech', '99099', 'MON-23-016', 'LB457', 'New', '', 3);
 
 -- --------------------------------------------------------
 
@@ -84,21 +86,17 @@ CREATE TABLE `log` (
   `id` bigint(20) NOT NULL,
   `activity` text NOT NULL,
   `date_done` date NOT NULL,
-  `userID` bigint(11) NOT NULL
+  `userID` bigint(11) NOT NULL,
+  `itemID` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- --------------------------------------------------------
-
 --
--- Table structure for table `report`
+-- Dumping data for table `log`
 --
 
-CREATE TABLE `report` (
-  `id` int(11) NOT NULL,
-  `title` varchar(255) NOT NULL,
-  `content` varchar(2000) NOT NULL,
-  `created_on` date NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+INSERT INTO `log` (`id`, `activity`, `date_done`, `userID`, `itemID`) VALUES
+(1, 'An item has been added to the inventory', '2023-07-17', 1, 16),
+(2, 'An item has been updated', '2023-07-17', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -125,6 +123,13 @@ CREATE TABLE `request` (
   `userID` bigint(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `request`
+--
+
+INSERT INTO `request` (`id`, `name`, `description`, `type`, `quantity`, `date_requested`, `date_needed`, `status`, `unit`, `unit_cost`, `total_amount`, `payee`, `payment_instruction`, `labor_cost`, `categoryID`, `userID`) VALUES
+(1, 'test', 'test2', 'WRF', 2, '2023-07-17', '2023-08-30', 'Pending', 0, 0, 0, '', '', 65, 2, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -139,15 +144,16 @@ CREATE TABLE `user` (
   `date_created` date NOT NULL,
   `authority` enum('Tech','Head','Admin') NOT NULL,
   `email` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL
+  `password` varchar(255) NOT NULL,
+  `status` enum('Active','Inactive') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`id`, `fname`, `lname`, `contact_no`, `date_created`, `authority`, `email`, `password`) VALUES
-(1, 'admin', 'admin', '123', '2023-07-01', 'Tech', 'admin@gmail.com', 'admin');
+INSERT INTO `user` (`id`, `fname`, `lname`, `contact_no`, `date_created`, `authority`, `email`, `password`, `status`) VALUES
+(1, 'admin', 'admin', '123', '2023-07-01', 'Admin', 'admin@gmail.com', 'admin', 'Active');
 
 --
 -- Indexes for dumped tables
@@ -171,13 +177,8 @@ ALTER TABLE `item`
 --
 ALTER TABLE `log`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `FK_userID` (`userID`);
-
---
--- Indexes for table `report`
---
-ALTER TABLE `report`
-  ADD PRIMARY KEY (`id`);
+  ADD KEY `FK_userID` (`userID`),
+  ADD KEY `FK_item_id` (`itemID`);
 
 --
 -- Indexes for table `request`
@@ -207,25 +208,19 @@ ALTER TABLE `category`
 -- AUTO_INCREMENT for table `item`
 --
 ALTER TABLE `item`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `log`
 --
 ALTER TABLE `log`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `report`
---
-ALTER TABLE `report`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `request`
 --
 ALTER TABLE `request`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `user`
@@ -247,6 +242,7 @@ ALTER TABLE `item`
 -- Constraints for table `log`
 --
 ALTER TABLE `log`
+  ADD CONSTRAINT `FK_item_id` FOREIGN KEY (`itemID`) REFERENCES `item` (`id`),
   ADD CONSTRAINT `FK_userID` FOREIGN KEY (`userID`) REFERENCES `user` (`id`);
 
 --
