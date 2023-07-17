@@ -147,4 +147,75 @@ app.post("/report-create", (req, res) => {
   );
 });
 
+app.get("/user", async function (req, res) {
+  // user.body
+
+  connection.query(
+    "SELECT * FROM `user`;",
+    function (error, results, fields) {
+      if (error) throw error;
+      // console.log(results);
+      res.json(results); //send
+    }
+  );
+});
+
+app.post("/user-create", (req, res) => {
+  const user = req.body;
+
+  connection.query(
+    "INSERT INTO user (id, fname, lname, contact_no, date_created, authority, email, password, status) VALUES (?,?,?,?,?,?,?,?,?)",
+    [
+      user.id,
+      user.fname,
+      user.lname,
+      user.contact_no,
+      user.date_created,
+      user.authority,
+      user.email,
+      user.password,
+      user.status
+    ],
+    (error, result) => {
+      if (error) {
+        console.log(error);
+        res.status(500).json({ error: "Failed to insert data" });
+      } else {
+        res.status(200)
+      }
+    }
+  );
+});
+
+app.post("/user-update", (req, res) => {
+  res.json({ message: "Data received successfully" });
+
+  const user = req.body;
+
+  connection.query(
+    "UPDATE user SET fname = '" +
+      user.fname +
+      "', lname = '" +
+      user.lname +
+      "', contact_no = '" +
+      user.contact_no +
+      "', date_created = '" +
+      user.date_created +
+      "', authority = '" +
+      user.authority +
+      "', email = '" +
+      user.email +
+      "', password = '" +
+      user.password +
+      "', status = '" +
+      user.status +
+      "' WHERE id = '" +
+      user.id +
+      "'",
+    (error, result) => {
+      console.log(error);
+    }
+  );
+});
+
 app.listen(5000);
