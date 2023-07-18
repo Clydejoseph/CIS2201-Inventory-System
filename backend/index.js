@@ -55,31 +55,18 @@ app.get('/report', async function (req, res){
   )
 });
 
-app.get('/report-requests', async function (req, res){
-  connection.query(
-    "SELECT COUNT(*) AS req_count FROM request WHERE MONTH(date_requested) = MONTH(CURDATE());",
-    (error, result) => {
-      if(error){
-        console.log(error);
-      }
+// app.get('/report-requests', async function (req, res){
+//   connection.query(
+//     "SELECT COUNT(*) AS req_count FROM request WHERE MONTH(date_requested) = MONTH(CURDATE());",
+//     (error, result) => {
+//       if(error){
+//         console.log(error);
+//       }
 
-      res.json(result);
-    }
-  )
-});
-
-app.get('/report-dispose', async function (req, res){
-  connection.query(
-    "SELECT COUNT(*) AS dispose_count FROM item WHERE status = 'Dispose';",
-    (error, result) => {
-      if(error){
-        console.log(error);
-      }
-
-      res.json(result);
-    }
-  )
-});
+//       res.json(result);
+//     }
+//   )
+// });
 
 
 app.post('/login', (req, res) => {
