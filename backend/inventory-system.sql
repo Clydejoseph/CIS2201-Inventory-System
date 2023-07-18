@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 17, 2023 at 12:03 PM
+-- Generation Time: Jul 18, 2023 at 05:30 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -70,9 +70,9 @@ CREATE TABLE `item` (
 --
 
 INSERT INTO `item` (`id`, `name`, `description`, `brand`, `date_acquired`, `supplier`, `serial_no`, `asset_code`, `location`, `status`, `recipient`, `categoryID`) VALUES
-(1, 'test update with log4', 'I changed the description!', 'Logitech Shroud', '2023-07-05', 'PlayTech', '1234', 'MSE-001', 'LB114', 'Defective', '', 1),
-(13, 'test', 'test', 'Logitech Shroud', '2023-07-22', 'PlayTech', '123TEST', 'KEY-23-013', 'LB457', 'New', '', 2),
-(14, 'mouse', 'test', 'logitech', '2023-07-05', 'PlayTech', '7777', 'MOU-23-014', 'LB117', 'New', '', 1),
+(1, 'test update with log4', 'I changed the description!', 'Logitech Shroud', '2023-07-05', 'PlayTech', '1234', 'MSE-001', 'LB114', 'Dispose', '', 1),
+(13, 'test change desc with log!', 'test', 'Logitech Shroud', '2023-07-22', 'PlayTech', '123TEST', 'KEY-23-013', 'LB457', 'New', '', 2),
+(14, 'mouse', 'test', 'logitech', '2023-07-05', 'PlayTech', '7777', 'MOU-23-014', 'LB117', 'Donate', 'somewhere', 1),
 (15, 'test with logs', 'test!', 'CDRking', '2023-07-21', 'PlayTech', '9909', 'MON-23-015', 'LB457', 'New', '', 3),
 (16, 'test with log2', 'test!', 'CDRking', '2023-07-11', 'PlayTech', '99099', 'MON-23-016', 'LB457', 'New', '', 3);
 
@@ -96,7 +96,11 @@ CREATE TABLE `log` (
 
 INSERT INTO `log` (`id`, `activity`, `date_done`, `userID`, `itemID`) VALUES
 (1, 'An item has been added to the inventory', '2023-07-17', 1, 16),
-(2, 'An item has been updated', '2023-07-17', 1, 1);
+(2, 'An item has been updated', '2023-07-17', 1, 1),
+(3, 'An item has been updated.', '2023-07-18', 1, 13),
+(4, 'An item has been updated.', '2023-07-18', 1, 16),
+(5, 'An item has been tagged for donation.', '2023-07-18', 1, 14),
+(6, 'An item has been tagged for donation.', '2023-07-18', 1, 14);
 
 -- --------------------------------------------------------
 
@@ -112,7 +116,8 @@ CREATE TABLE `request` (
   `quantity` int(11) NOT NULL,
   `date_requested` date NOT NULL,
   `date_needed` date DEFAULT NULL,
-  `status` enum('Pending','Approved','Denied') NOT NULL,
+  `status1` enum('Pending','Approved','Denied') NOT NULL,
+  `status2` enum('Pending','Approved','Denied') NOT NULL,
   `unit` int(11) DEFAULT NULL,
   `unit_cost` int(11) DEFAULT NULL,
   `total_amount` int(11) DEFAULT NULL,
@@ -127,8 +132,15 @@ CREATE TABLE `request` (
 -- Dumping data for table `request`
 --
 
-INSERT INTO `request` (`id`, `name`, `description`, `type`, `quantity`, `date_requested`, `date_needed`, `status`, `unit`, `unit_cost`, `total_amount`, `payee`, `payment_instruction`, `labor_cost`, `categoryID`, `userID`) VALUES
-(1, 'test', 'test2', 'WRF', 2, '2023-07-17', '2023-08-30', 'Pending', 0, 0, 0, '', '', 65, 2, 1);
+INSERT INTO `request` (`id`, `name`, `description`, `type`, `quantity`, `date_requested`, `date_needed`, `status1`, `status2`, `unit`, `unit_cost`, `total_amount`, `payee`, `payment_instruction`, `labor_cost`, `categoryID`, `userID`) VALUES
+(1, 'test', 'test2', 'WRF', 2, '2023-07-17', '2023-08-30', 'Approved', 'Approved', 0, 0, 0, '', '', 65, 2, 1),
+(2, 'test3', '', 'RIS', 3, '2023-07-17', '2023-07-20', 'Approved', 'Denied', 2, 5000, 0, 'test', '', 0, 3, 1),
+(3, 'test4', '', 'WRF', 2, '2023-07-17', '2023-07-29', 'Approved', 'Approved', 0, 0, 0, '', '', 150, 4, 1),
+(4, 'test5', '', 'WRF', 2, '2023-07-17', '2023-07-13', 'Approved', 'Approved', 0, 0, 0, '', '', 1200, 3, 1),
+(5, 'test6', '', 'WRF', 5, '2023-07-17', '2023-07-27', 'Approved', 'Denied', 0, 0, 0, '', '', 500, 1, 1),
+(6, 'test7', '', 'WRF', 2, '2023-07-17', '2023-07-06', 'Pending', 'Pending', 0, 0, 0, '', '', 120, 1, 1),
+(7, 'test8', '', 'RIS', 5, '2023-07-17', '2023-07-01', 'Pending', 'Pending', 1, 700, 0, 'test', '', 0, 1, 1),
+(8, 'test9', '', 'WRF', 2, '2023-07-18', '2023-07-21', 'Pending', 'Pending', 0, 0, 0, '', '', 200, 4, 1);
 
 -- --------------------------------------------------------
 
@@ -153,7 +165,9 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `fname`, `lname`, `contact_no`, `date_created`, `authority`, `email`, `password`, `status`) VALUES
-(1, 'admin', 'admin', '123', '2023-07-01', 'Admin', 'admin@gmail.com', 'admin', 'Active');
+(1, 'admin', 'admin', '123', '2023-07-01', 'Admin', 'admin@gmail.com', 'admin', 'Active'),
+(2, 'first', 'last', '122334', '2023-07-18', 'Tech', 'tech@gmail.com', 'tech', 'Active'),
+(3, 'lab', 'head', '1234567890', '2023-07-18', 'Head', 'head@gmail.com', 'head', 'Active');
 
 --
 -- Indexes for dumped tables
@@ -214,19 +228,19 @@ ALTER TABLE `item`
 -- AUTO_INCREMENT for table `log`
 --
 ALTER TABLE `log`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `request`
 --
 ALTER TABLE `request`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Constraints for dumped tables

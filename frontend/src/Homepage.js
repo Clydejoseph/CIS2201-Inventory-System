@@ -6,44 +6,38 @@ import { Heading } from '@chakra-ui/react';
 import './css/homepage-style.css'
 
 
-
-// import Team from "./pages/Team";
-import Report from "./pages/Report";
-// import Inventory from "./pages/Inventory";
-// import Dashboard from './pages/Dashboard';
-// import Room from './pages/Room';
-
 import TechHome from './pages/labTech/Tech-Home';
 import TechAsset from './pages/labTech/Tech-Asset';
 import TechRequest from './pages/labTech/Tech-Request';
-import TechNav from './component/navBars/Nav-LabTech';
+import TechReport from './pages/labTech/Tech-Report';
 
 import HeadAsset from './pages/labHead/Head-Asset';
 import HeadRequest from './pages/labHead/Head-Request';
 import HeadLog from './pages/labHead/Head-Logs';
 
 import AdminAccount from './pages/admin/Admin-Account';
-import AdminAsset from './pages/admin/Admin-Asset';
+import AdminLog from './pages/admin/Admin-Log';
 import AdminRequest from './pages/admin/Admin-Request';
 
 function pageCont(){
+
+  const userData = JSON.parse(sessionStorage.getItem('account')) == null? 'default' : JSON.parse(sessionStorage.getItem('account'));
+
   return (
     <div className='page'>
-      <TechNav />
-        {/* <Navigationbar component = {'VnavBar'}></Navigationbar>
-        <Navigationbar component ={'HnavBar'}></Navigationbar> */}
+      <Navigationbar component = {userData.auth} />
         <div className="pageActive">
           <Routes>
                 <Route path="/" element={<TechHome />}></Route>
                 <Route path="/tech-asset" element={<TechAsset />}></Route>
                 <Route path="/tech-request" element={<TechRequest />}></Route>
+                <Route path="/report" element={<TechReport />}></Route>
                 <Route path="/head-asset" element={<HeadAsset />}></Route>
                 <Route path="/head-request" element={<HeadRequest />}></Route>
                 <Route path="/head-log" element={<HeadLog />}></Route>
-                <Route path="/admin-asset" element={<AdminAsset />}></Route>
+                <Route path="/admin-log" element={<AdminLog />}></Route>
                 <Route path="/admin-request" element={<AdminRequest />}></Route>
                 <Route path="/admin-account" element={<AdminAccount />}></Route>
-                <Route path="/report" element={<Report />}></Route>
                 <Route path="*" Component={wrongRoute}></Route>
           </Routes>
         </div>
@@ -65,19 +59,19 @@ function Home() {
   const [accountLogged , setaccount] = useState(false);
 
 
-  //--------login session off for now------------
 
-  // useEffect(() =>{
-  //   if(sessionStorage.getItem('account') === 'null'){
-  //     setaccount(false);
-  //     navigate('/login');
+
+  useEffect(() =>{
+    if(sessionStorage.getItem('account') === 'null'){
+      setaccount(false);
+      navigate('/login');
       
-  //   }else{
-  //     setaccount(true);
-  //   }
-  // },[navigate])
+    }else{
+      setaccount(true);
+    }
+  },[navigate])
 
-  // const checkerAccount = () => (sessionStorage.getItem('account') === 'null') ? setaccount(false) : setaccount(true);
+  const checkerAccount = () => (sessionStorage.getItem('account') === 'null') ? setaccount(false) : setaccount(true);
 
 
   return (

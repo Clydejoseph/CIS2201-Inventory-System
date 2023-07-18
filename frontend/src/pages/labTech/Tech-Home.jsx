@@ -4,6 +4,7 @@ import { SimpleGrid } from '@chakra-ui/react'
 
 import '../../css/tech-home.css'
 import { useNavigate } from 'react-router-dom'
+import Dashboard from '../Dashboard'
 
 export default function TechHome(){
 
@@ -11,15 +12,18 @@ export default function TechHome(){
 
     const navigate = useNavigate();
 
+    // const userData = JSON.parse(sessionStorage.getItem('account'));
+
+    // // Example usage:
+    // console.log(userData.email); // Output the user's email
+    // console.log(userData.auth); // Output the user's authority or role
 
     return(
 
-        <div>
-            <Heading className='home-header'>Inventory System</Heading>
+        <div className='home' style={{width: '100vw' , height: '90vh'}}>
+                <Dashboard />
 
-            <div className='dashboard'>
-
-                <SimpleGrid spacing={4} templateColumns='repeat(3, minmax(200px, 1fr))'>
+                {/* <SimpleGrid spacing={4} templateColumns='repeat(3, minmax(200px, 1fr))'>
 
                     <Card id='cardbox'>
                         <CardHeader>
@@ -58,9 +62,8 @@ export default function TechHome(){
                         </CardFooter>
                     </Card>
 
-                </SimpleGrid>
+                </SimpleGrid> */}
 
-            </div>
         </div>
     )
 }

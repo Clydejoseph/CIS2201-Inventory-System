@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import {useNavigate} from 'react-router-dom'
 import {
     Table,
     Thead,
@@ -36,6 +37,8 @@ import '../../css/table-request.css'
 
 
 function CreateRequest(){
+  
+    const userData = JSON.parse(sessionStorage.getItem('account'));
     const { isOpen, onOpen, onClose } = useDisclosure()
   
     const initialRef = React.useRef(null)
@@ -46,17 +49,16 @@ function CreateRequest(){
         description: '',
         type: '',
         item: '',
-        date_requested: '',
         date_needed: '',
-        status: 'Pending',
+        status1: 'Pending', status2: 'pending',
         unit: '',
         unit_cost: '',
         quantity: '',
         total_amount: '',
         payee: '',
-        instructions: '',
+        instruction: '',
         labor_cost: '',
-        requestor: ''
+        user_id: userData.id
       });
 
 
@@ -90,7 +92,7 @@ function CreateRequest(){
   
     return (
       <>
-        <Button onClick={onOpen}>Create Request</Button>
+        <Button onClick={onOpen} colorScheme={'facebook'} width={'100%'}>Create Request</Button>
   
         <Modal
           initialFocusRef={initialRef}
@@ -131,10 +133,10 @@ function CreateRequest(){
             <FormControl>
                 <FormLabel>Item</FormLabel>
                 <Select name='item' placeholder='select item' onChange={handleChange}>
-                    <option value="Mouse">Mouse</option>
-                    <option value="Keyboard">Keyboard</option>
-                    <option value="Monitor">Monitor</option>
-                    <option value="Tool">Tool</option>
+                    <option value="1">Mouse</option>
+                    <option value="2">Keyboard</option>
+                    <option value="3">Monitor</option>
+                    <option value="4">Tool</option>
                 </Select>
             </FormControl>
 
@@ -219,22 +221,12 @@ function CreateRequest(){
                                         fontSize='1.2em'
                                         children='₱'/>
                     <Input  name='labor_cost'
-                            value={request.unit_cost * request.quantity}
                             onChange={handleChange}
                             type="number" />
                 </InputGroup>
                 </FormControl> 
                 </>
-            )}
-
-                <FormControl>
-                <FormLabel>Requested by</FormLabel>
-                <Input  name='requestor'
-                        onChange={handleChange}
-                        type="text" />
-                </FormControl>
-
-            
+            )}   
 
             <Button type='submit' id='modalButton' colorScheme='blue' mr={3}>
                 Submit
@@ -255,6 +247,7 @@ function CreateRequest(){
 
 export default function TechRequest(){
 
+    const linkTo = useNavigate();
     const [data, setData] = useState([]);
     const [searchItem ,setSearchItem] = useState('');
 
@@ -269,21 +262,25 @@ export default function TechRequest(){
 
 
     useEffect(() => {
-      // Fetch data from the SQL database
-      axios.get('http://localhost:5000/request/')
-        .then(response => {
-          setData(response.data);
-          console.log(response.data);
-        })
-        .catch(error => {
-          console.error(error);
-        });
-    }, []);
+      const userData = JSON.parse(sessionStorage.getItem('account'));
+      if (!userData) {
+        linkTo('/login');
+      } else {
+        // Fetch data from the SQL database
+        axios.get('http://localhost:5000/requestTech/')
+          .then(response => {
+            setData(response.data);
+            // console.log(response.data);
+          })
+          .catch(error => {
+            console.error(error);
+          });
+      }
+    }, [linkTo]);
 
     return(
 
         <>
-
             <div className='table-request'>
 
 
@@ -291,17 +288,12 @@ export default function TechRequest(){
             <HStack justify={'space-between'} width={'100%'} padding={'0px 8px 0px 8px'}>
               <Heading size='xl' color={'black'} fontFamily={'rubik'}>Request</Heading>
               <HStack>
-                  <FormControl>
-                    <Input type='text'  placeholder='SEARCH' onChange={(e) =>{setSearchItem(e.target.value)}}/>
-                  </FormControl>
                   <CreateRequest />
               </HStack>
             </HStack>
 
-
             <TableContainer borderRadius={'10px'} width={'100%'} overflowY={'auto'} boxShadow={'xl'} height={'70vh'} >
                 <Table colorScheme='facebook'  variant='simple' >
-                    {/* <TableCaption>Imperial to metric conversion factors</TableCaption> */}
 
                     <Thead>
                     <Tr position={'sticky'} top={0} bgColor={'facebook.400'} zIndex={'1'}>
@@ -310,46 +302,33 @@ export default function TechRequest(){
                         <Th color={'white'}>Type</Th>
                         <Th color={'white'}>Item Requested</Th>
                         <Th color={'white'}>Date Requested</Th>
-                        <Th color={'white'}>Date Needed</Th>
                         <Th color={'white'}>Status</Th>
                     </Tr>
                     </Thead>
                     <Tbody>
-                    {data.filter((srchVal) =>{
-                        if(searchItem == '' ){
-                          return srchVal;
-                        }
-                        else if(srchVal.id.toLowerCase().includes(searchItem.toLowerCase())){
-                          return srchVal;
-                        }
-                        else if(srchVal.name.toLowerCase().includes(searchItem.toLowerCase())){
-                          return srchVal;
-                        }
-                        else if(srchVal.type.toLowerCase().includes(searchItem.toLowerCase())){
-                          return srchVal;
-                        }
-                        else if(srchVal.item.toLowerCase().includes(searchItem.toLowerCase())){
-                          return srchVal;
-                        }
-                        else if(srchVal.date_requested.toLowerCase().includes(searchItem.toLowerCase())){
-                          return srchVal;
-                        }
-                        else if(srchVal.date_needed.toLowerCase().includes(searchItem.toLowerCase())){
-                          return srchVal;
-                        }
-                        else if(srchVal.status.toLowerCase().includes(searchItem.toLowerCase())){
-                          return srchVal;
-                        }
-                      }).map((request , index ) => {
+                    {data.map((request , index ) => {
                         return(
                           <Tr key={index}>
                             <Td>{request.id}</Td>
                             <Td>{request.name}</Td>
                             <Td>{request.type}</Td>
-                            <Td>{request.item}</Td>
+                            <Td>{request.item_requested}</Td>
                             <Td>{formatDateString(request.date_requested)}</Td>
-                            <Td>{formatDateString(request.date_needed)}</Td>
-                            <Td>{request.status}</Td>
+                            {(request.status1 === 'Pending' || request.status2 === 'Pending') && (
+                              <>
+                                <Td>Pending</Td>
+                              </>
+                            )}
+                            {request.status1 === 'Approved' && request.status2 === 'Approved' && (
+                              <>
+                                <Td>Approved</Td>
+                              </>
+                            )}
+                            {(request.status1 === 'Denied' || request.status2 === 'Denied') && (
+                              <>
+                                <Td>Denied</Td>
+                              </>
+                            )}
                           </Tr>
                         )
                       })}

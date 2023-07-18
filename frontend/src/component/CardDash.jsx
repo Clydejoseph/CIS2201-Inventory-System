@@ -1,14 +1,20 @@
-import { Card, CardBody, CardHeader, Heading } from '@chakra-ui/react'
+import { Card, CardHeader, Heading ,HStack ,StackDivider , Text ,Box, CardBody } from '@chakra-ui/react'
 import React from 'react'
 
-function CardDash({title , count,color}) {
+function CardDash({count , title}) {
   return (
-    <Card zIndex={'-1'} bgColor={color} size={'sm'} width={'100%'} justify={'center'} textAlign={'center'} variant={'outline'}>
-          <CardHeader><Heading as={'h4'} size={'sm'}>{title.toUpperCase()}</Heading></CardHeader>
-          <CardBody>
-            <Heading  as={'h6'} size={'2xs'}>{count}</Heading>
-          </CardBody>
-        </Card>
+    <Card direction={'row'} size={'lg'} width={'15vw'} variant={'elevated'} _hover={'grey'}>
+      <CardBody>
+          < HStack divider={<StackDivider bgColor={'black'} width={'4px'}/>} align={'stretch'}>
+                        <Heading color={'blackAlpha.900'} size={'sm'} as={'h6'} width={'100%'}>
+                            <Text  textTransform={'uppercase'}>{title}</Text>
+                        </Heading>
+                        <Box>
+                            <Text>{count}</Text>
+                        </Box>
+                    </HStack>
+      </CardBody>
+    </Card>
   )
 }
 

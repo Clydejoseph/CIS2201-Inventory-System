@@ -140,7 +140,8 @@ function DetailItem({selected}) {
               {item.status === 'Donate' && (
                   <FormControl isReadOnly>
                   <FormLabel>Recipient</FormLabel>
-                  <Input value={item.recipient}
+                  <Input name='recipient'
+                          value={item.recipient}
                           type="text"/>
                   </FormControl>
               )}
@@ -156,7 +157,7 @@ function DetailItem({selected}) {
   }
 
 
-export default function HeadLog(){
+export default function AdminLog(){
 
   const linkTo = useNavigate();
   const [data, setData] = useState([]);

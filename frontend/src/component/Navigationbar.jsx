@@ -1,28 +1,28 @@
-// import React from 'react'
-// import { useState } from 'react'
-// // import TopNav from './navBars/TopNav'
-// // import SideNav from './navBars/SideNav'
-// // import SideNav2 from './navBars/SideNav2';
+import React from 'react'
+import { useState } from 'react'
+
+import TechNav from './navBars/Nav-LabTech';
+import HeadNav from './navBars/Nav-LabHead';
+import AdminNav from './navBars/Nav-Admin';
 
 
-// function NavComponent(component) {
 
-//     // const [compState , setCompt] = useState();
+function NavComponent(component) {
 
-//     if(component === 'HnavBar'){
-//         return <TopNav />;
-//     }
-//     else if(component === 'VnavBar'){
-//        return <SideNav />;
-//     }
-//     if(component !== 'HnavBar' || component !== 'VnavBar'){
-//         console.log(component);
-//         console.log("Invalid component");
-//     }
-// }
 
-// function Navigationbar(props) {
-//   return NavComponent(props.component);
-// }
+    if(component === 'Tech'){
+        return <TechNav />;
+    }
+    else if(component === 'Head'){
+       return <HeadNav />;
+    }
+    else if(component === 'Admin'){
+        return <AdminNav />
+    }
+}
 
-// export default Navigationbar
+function Navigationbar(props) {
+  return NavComponent(props.component);
+}
+
+export default Navigationbar

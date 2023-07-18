@@ -1,130 +1,94 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import './css/Login.css';
-
-//data
-import { LoginAccounts } from './dataExport/Loginaccount';
-
-import {
-  Card,
-  CardHeader,
-  Heading,
-  Input,
-  Image,
-  Button,
-  CardBody,
-  Stack,
-} from '@chakra-ui/react';
+import {React , useState } from 'react'
+import {useNavigate} from 'react-router-dom'
+import './css/Login.css'
+import axios from 'axios'
+import { Card, CardHeader, Heading,Input,Button, CardBody, Stack } from '@chakra-ui/react'
 import {
   FormControl,
   FormErrorMessage,
-} from '@chakra-ui/react';
+} from '@chakra-ui/react'
+
 
 function Login() {
-  const linkto = useNavigate();
+  const linkTo = useNavigate();
 
-  const [username, setUname] = useState('');
-  const [password, setPword] = useState('');
-
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [message, setMessage] = useState('');
   const [Uerror, setU_Error] = useState(false);
   const [Perror, setP_Error] = useState(false);
 
-  // Handle password input
   const HandlePword = (e) => {
-    setPword(e.target.value);
+    setPassword(e.target.value);
     setP_Error(false);
   };
 
-  // Handle username input
-  const HandleUname = (e) => {
-    setUname(e.target.value);
+  const HandleEmail = (e) => {
+    setEmail(e.target.value);
     setU_Error(false);
   };
 
-  // Form submission
   function submitForm(e) {
     e.preventDefault();
+    setMessage('Field is empty');
 
-    if (username === '') {
+    if (email === '') {
       setU_Error(true);
     }
+
     if (password === '') {
       setP_Error(true);
     }
-
-    if (username !== '' && password !== '') {
-      let result = LoginAccounts.find((res) => res.username === username);
-
-      if (result) {
-        console.log(result);
-        sessionStorage.setItem(
-          'account',
-          JSON.stringify({
-            username: result.username,
-            password: result.password,
-            auth: result.authority,
-          })
-        );
-        linkto('/');
-      } else {
+    else {
+      axios
+      .post('http://localhost:5000/login', { email, password })
+      .then((response) => {
+        const userData = response.data;
+        sessionStorage.setItem('account', JSON.stringify(userData));
+        linkTo('/');
+        console.log(response);
+      })
+      .catch((error) => {
+        setMessage('Email does not exist');
         setU_Error(true);
-      }
+        setP_Error(true);
+        const errorMessage =
+          error.response?.data?.error || 'An error occurred during login.';
+        setMessage(errorMessage);
+      });
     }
-  }
-
-  return (
-    <div className="Login">
-      <Card align="center" className="cards">
-        <img src="/DCISM.png" alt="Logo" className="Logo" />
-
-        <CardHeader>
-          <Heading size="md" className='header'>LOGIN</Heading>
-        </CardHeader>
-        <CardBody>
-          <FormControl as="fieldset" className="LoginBox">
-            <Stack spacing={4} direction="column">
-              <Stack spacing={4} direction="column">
-                <FormControl isInvalid={Uerror}>
-                  {!Uerror ? (
-                    ''
-                  ) : (
-                    <FormErrorMessage>Invalid username </FormErrorMessage>
-                  )}
-                  <Input
-                    type="text"
-                    placeholder={'Username'}
-                    value={username}
-                    onChange={HandleUname}
-                  />
-                </FormControl>
-                <FormControl isInvalid={Perror}>
-                  {!Perror ? (
-                    ''
-                  ) : (
-                    <FormErrorMessage>Invalid password </FormErrorMessage>
-                  )}
-                  <Input
-                    type="password"
-                    placeholder="Password"
-                    value={password}
-                    onChange={HandlePword}
-                  />
-                </FormControl>
-              </Stack>
-              <Button
-                colorScheme="messenger"
-                onClick={submitForm}
-                loadingText="Submitting"
-                disabled={!username || !password}
-              >
-                Log in
-              </Button>
-            </Stack>
-          </FormControl>
-        </CardBody>
-      </Card>
-    </div>
-  );
 }
 
-export default Login;
+
+  return (
+        <div className="Login">
+          <Card align='center' className='cards'>
+            <CardHeader>
+              <Heading size='md' color={'black'}>Log in</Heading>
+            </CardHeader>
+            <CardBody>
+            <FormControl as='fieldset' className='LoginBox'>
+                  <Stack spacing={4} direction='column'>
+                  <Stack spacing={4} direction='column'>
+                    <FormControl isInvalid={Uerror}>
+                    {!Uerror ? ("") : (<FormErrorMessage>{message} </FormErrorMessage>) }
+                      <Input type="text" placeholder={'Email'} value={email} onChange={HandleEmail}/>
+                    </FormControl>
+                    <FormControl isInvalid={Perror}>
+                      {!Perror ? ("") : (<FormErrorMessage>Wrong password </FormErrorMessage>) }
+                      <Input type="password" placeholder='Password' value={password} onChange={HandlePword}/>
+                    </FormControl>
+                  </Stack>
+                    <Button colorScheme='messenger' 
+                            onClick={submitForm}  
+                            loadingText='Submitting'
+                            >Log in</Button>
+                  </Stack>
+            </FormControl>
+            </CardBody>
+          </Card>
+        </div>
+  )
+}
+
+export default Login

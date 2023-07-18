@@ -7,7 +7,7 @@ import TechAsset from '../../pages/labTech/Tech-Asset';
 import { json, useNavigate } from 'react-router-dom';
 
 
-export default function TechNav(){
+export default function HeadNav(){
     const navigate = useNavigate();
 
     const accountActive =  JSON.parse(sessionStorage.getItem('account'));
@@ -42,9 +42,9 @@ export default function TechNav(){
             <Tabs orientation={'vertical'} variant={'unstyled'}>
                 <TabList>
                     <Tab _selected={{ color: 'white', bg: 'blue.500' }} onClick={() =>{navigate('/')}}>Dashboard</Tab>
-                    <Tab _selected={{ color: 'white', bg: 'blue.500' }} onClick={() =>{navigate('/tech-asset')}}> Equipment/Tool</Tab>
-                    <Tab _selected={{ color: 'white', bg: 'blue.500' }} onClick={() =>{navigate('/tech-request')}}>Request Forms</Tab>
-                    <Tab _selected={{ color: 'white', bg: 'blue.500' }} onClick={() =>{navigate('/report')}}>Report/Analytics</Tab>
+                    <Tab _selected={{ color: 'white', bg: 'blue.500' }} onClick={() =>{navigate('/head-asset')}}> Equipment/Tool</Tab>
+                    <Tab _selected={{ color: 'white', bg: 'blue.500' }} onClick={() =>{navigate('/head-request')}}>Requests</Tab>
+                    <Tab _selected={{ color: 'white', bg: 'blue.500' }} onClick={() =>{navigate('/head-log')}}>Activity Logs</Tab>
                     <Tab _selected={{ color: 'white', bg: 'blue.500' }} onClick={() =>{logoutfunc()}}>Log Out</Tab>
                 </TabList>
             </Tabs>

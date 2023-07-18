@@ -32,7 +32,7 @@ function BarChart() {
             <Bar
                 data={data}
                 options={options}
-                height={'50%'}
+                
             >
 
             </Bar>
