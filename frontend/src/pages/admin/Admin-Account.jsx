@@ -265,9 +265,9 @@ function UpdateUser({ selected }) {
                   value={user.authority}
                   onChange={handleChange}
                 >
-                  <option value="Tech">Active</option>
-                  <option value="Head">Inactive</option>
-                  <option value="Admin">Inactive</option>
+                  <option value="Tech">Tech</option>
+                  <option value="Head">Head</option>
+                  <option value="Admin">Admin</option>
                 </Select>
               </FormControl>
               <hr />
