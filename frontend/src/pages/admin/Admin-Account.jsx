@@ -258,9 +258,16 @@ function UpdateUser({ selected }) {
                 />
               </FormControl>
               <hr />
-              <FormControl isReadOnly>
+              <FormControl>
                 <FormLabel>User Role</FormLabel>
-                <Input value={user.authority} type="text" />
+                <Select
+                  name="authority"
+                  value={user.authority}
+                  onChange={handleChange}
+                >
+                  <option value="Active">Active</option>
+                  <option value="Inactive">Inactive</option>
+                </Select>
               </FormControl>
               <hr />
               <FormControl>

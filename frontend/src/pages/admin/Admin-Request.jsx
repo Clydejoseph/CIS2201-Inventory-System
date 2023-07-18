@@ -40,6 +40,16 @@ import '../../css/table-request.css'
 function RequestDetail({selected}) {
 
     const { isOpen, onOpen, onClose } = useDisclosure()
+
+    const formatDateString = (dateString) => {
+      if (!dateString) {
+        return 'invalid date'; // Return empty string or another fallback value
+      }
+    
+      const formattedDate = new Date(dateString);
+      return formattedDate.toLocaleDateString();
+    };
+
   
     const initialRef = React.useRef(null)
     const finalRef = React.useRef(null)
@@ -136,8 +146,7 @@ function RequestDetail({selected}) {
               <FormControl isReadOnly>
                   <FormLabel>Date Requested</FormLabel>
                   <Input  name='brand'
-                          value={item.date_requested}
-                          type="date" />
+                          value={formatDateString(item.date_requested)} />
               </FormControl>
 
                 {item.type === 'RIS' && (
@@ -200,9 +209,8 @@ function RequestDetail({selected}) {
 
                     <FormControl isReadOnly>
                     <FormLabel>Date Needed</FormLabel>
-                    <Input  value={item.date_needed}
-                            size="md"
-                            type="date" />
+                    <Input  value={formatDateString(item.date_needed)}
+                            size="md"/>
                     </FormControl>
 
                     <FormControl isReadOnly>
