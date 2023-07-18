@@ -40,7 +40,6 @@ export default function TechReport(){
   const linkTo = useNavigate();
   const [data, setData] = useState([]);
   const [dataR, setDataR] = useState([]);
-  const [dispose, setDispose] = useState([]);
 
   useEffect(() => {
     const userData = JSON.parse(sessionStorage.getItem('account'));
@@ -57,25 +56,15 @@ export default function TechReport(){
           console.error(error);
         });
 
-      axios
-        .get('http://localhost:5000/report-requests/')
-        .then((response) => {
-          setDataR(response.data);
-          console.log(dataR[0]);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-
-        axios
-        .get('http://localhost:5000/report-dispose/')
-        .then((response) => {
-          setDispose(response.data);
-          console.log(dispose[0].dispose_count);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+    //   axios
+    //     .get('http://localhost:5000/report-requests/')
+    //     .then((response) => {
+    //       setDataR(response.data);
+    //       console.log(dataR[0].req_count);
+    //     })
+    //     .catch((error) => {
+    //       console.error(error);
+    //     });
     }
   }, [linkTo]);
 
@@ -107,14 +96,10 @@ export default function TechReport(){
                             </Tr>
                             )
                         })}
-                        <Tr>
+                        {/* <Tr>
                             <Td>Number of Requests this month:</Td>
                             <Td>{dataR[0].req_count}</Td>
-                        </Tr>
-                        <Tr>
-                            <Td>Number of items tagged for diposal:</Td>
-                            <Td>{dispose[0].dispose_count}</Td>
-                        </Tr>
+                        </Tr> */}
                     </Tbody>
                 </Table>
             </TableContainer>

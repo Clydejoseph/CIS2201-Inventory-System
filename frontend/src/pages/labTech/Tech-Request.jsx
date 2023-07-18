@@ -244,6 +244,182 @@ function CreateRequest(){
 }
 
 
+function RequestDetail({selected}) {
+
+  // const userData = JSON.parse(sessionStorage.getItem('account'));
+
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
+  const initialRef = React.useRef(null)
+  const finalRef = React.useRef(null)
+
+  const [item, setItem] = useState({
+      id: selected.id,
+      name: selected.name,
+      description: selected.description,
+      type: selected.type,
+      item: selected.item_requested,
+      date_requested: selected.date_requested,
+      date_needed: selected.date_needed,
+      unit: selected.unit,
+      unit_cost: selected.unit_cost,
+      quantity: selected.quantity,
+      total_amount: selected.total_amount,
+      payee: selected.payee,
+      instruction: selected.payment_instruction,
+      labor_cost: selected.labor_cost,
+      requestor: selected.requestor,
+      status1: selected.status1,
+      status2: selected.status2
+    });
+
+    const formatDateString = (dateString) => {
+      if (!dateString) {
+        return 'invalid date'; // Return empty string or another fallback value
+      }
+    
+      const formattedDate = new Date(dateString);
+      return formattedDate.toLocaleDateString();
+    };
+
+
+  return (
+    <>
+      <Button colorScheme={'facebook'} onClick={onOpen}>Details</Button>
+
+      <Modal
+        initialFocusRef={initialRef}
+        finalFocusRef={finalRef}
+        isOpen={isOpen}
+        onClose={onClose}
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>{item.type} Details</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody pb={6}>
+
+          <form>
+            
+            <FormControl isReadOnly>
+                <FormLabel>Name</FormLabel>
+                <Input  value={item.name}
+                        type="text" />
+            </FormControl>
+
+            <FormControl isReadOnly>
+                <FormLabel>Description</FormLabel>
+                <Input  value={item.name}
+                        type="text" />
+            </FormControl>
+  
+            <FormControl isReadOnly>
+                <FormLabel>Item Requested</FormLabel>
+                <Input  value={item.item}
+                        type="text" />
+            </FormControl>
+
+            <FormControl isReadOnly>
+                <FormLabel>Date Requested</FormLabel>
+                <Input  name='brand'
+                        value={formatDateString(item.date_requested)} />
+            </FormControl>
+
+              {item.type === 'RIS' && (
+                  <>
+                  <FormControl isReadOnly>
+                  <FormLabel>Unit</FormLabel>
+                  <Input  value={item.unit}
+                          type="text" />
+                  </FormControl>
+  
+                  <FormControl isReadOnly>
+                  <FormLabel>Unit Cost</FormLabel>
+                  <InputGroup>
+                      <InputLeftElement pointerEvents='none'
+                                          fontSize='1.2em'
+                                          children='₱'/>
+                      <Input  value={item.unit_cost}
+                              type="number" />
+                  </InputGroup>
+                  </FormControl>
+  
+                  <FormControl isReadOnly>
+                  <FormLabel>Quantity</FormLabel>
+                  <Input  value={item.quantity}
+                          type="number" />
+                  </FormControl>
+  
+                  <FormControl isReadOnly>
+                  <FormLabel>Total Amount</FormLabel>
+                  <InputGroup>
+                      <InputLeftElement pointerEvents='none'
+                                          fontSize='1.2em'
+                                          children='₱'/>
+                      <Input  value={item.unit_cost * item.quantity}
+                              type="number" />
+                  </InputGroup>
+                  </FormControl>
+  
+                  <FormControl isReadOnly>
+                  <FormLabel>Payee</FormLabel>
+                  <Input  value={item.payee}
+                          type="text" />
+                  </FormControl>
+  
+                  <FormControl isReadOnly>
+                      <FormLabel>Payment Instructions</FormLabel>
+                      <Textarea  value={item.instruction}
+                              type="text" />
+                  </FormControl>
+                  </>
+              )}
+
+              {item.type === 'WRF' && (
+                  <>
+                  <FormControl isReadOnly>
+                  <FormLabel>Quantity</FormLabel>
+                  <Input  value={item.quantity}
+                          type="number" />
+                  </FormControl>
+
+                  <FormControl isReadOnly>
+                  <FormLabel>Date Needed</FormLabel>
+                  <Input  value={formatDateString(item.date_needed)}
+                          size="md"/>
+                  </FormControl>
+
+                  <FormControl isReadOnly>
+                  <FormLabel>Labor Cost</FormLabel>
+                  <InputGroup>
+                      <InputLeftElement pointerEvents='none'
+                                          fontSize='1.2em'
+                                          children='₱'/>
+                      <Input  value={item.labor_cost}
+                              type="number" />
+                  </InputGroup>
+                  </FormControl> 
+                  </>
+              )}   
+
+              <FormControl isReadOnly>
+              <FormLabel>Requested By</FormLabel>
+              <Input  value={item.requestor}
+                      type="text" />
+              </FormControl>
+
+              <Button id='modalButton' onClick={onClose}>Close</Button>
+
+          </form>
+          </ModalBody>
+
+        </ModalContent>
+      </Modal>
+    </>
+  )
+}
+
+
 
 export default function TechRequest(){
 
@@ -303,6 +479,7 @@ export default function TechRequest(){
                         <Th color={'white'}>Item Requested</Th>
                         <Th color={'white'}>Date Requested</Th>
                         <Th color={'white'}>Status</Th>
+                        <Th color={'white'}></Th>
                     </Tr>
                     </Thead>
                     <Tbody>
@@ -329,6 +506,7 @@ export default function TechRequest(){
                                 <Td>Denied</Td>
                               </>
                             )}
+                            <Td><RequestDetail selected={request} /></Td>
                           </Tr>
                         )
                       })}

@@ -66,6 +66,15 @@ function RequestDetail({selected}) {
         status2: selected.status2
       });
 
+   const formatDateString = (dateString) => {
+      if (!dateString) {
+        return 'invalid date'; // Return empty string or another fallback value
+      }
+    
+      const formattedDate = new Date(dateString);
+      return formattedDate.toLocaleDateString();
+    };
+
     const handleApprove = () => {
         const data = {
             status: 'Approved',
@@ -138,8 +147,7 @@ function RequestDetail({selected}) {
               <FormControl isReadOnly>
                   <FormLabel>Date Requested</FormLabel>
                   <Input  name='brand'
-                          value={item.date_requested}
-                          type="date" />
+                          value={formatDateString(item.date_requested)}/>
               </FormControl>
 
                 {item.type === 'RIS' && (
@@ -202,9 +210,8 @@ function RequestDetail({selected}) {
 
                     <FormControl isReadOnly>
                     <FormLabel>Date Needed</FormLabel>
-                    <Input  value={item.date_needed}
-                            size="md"
-                            type="date" />
+                    <Input  value={formatDateString(item.date_needed)}
+                            size="md" />
                     </FormControl>
 
                     <FormControl isReadOnly>
