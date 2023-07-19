@@ -28,10 +28,96 @@ app.get('/itemcount' , (req , res) =>{
     }
   })
 })
+app.get('/requestno' , (req , res)=>{
+  const sql ='SELECT COUNT(*) as reqNo FROM request WHERE status1 = "Pending";';
 
-app.get('/barChartData' , (req , res) =>{
-  const sql = "SELECT COUNT(*) AS item_count, MONTH(i.date_acquired) AS month_number, c.name AS item_name FROM item i, category c WHERE i.categoryID = c.id GROUP BY categoryID;"
+  connection.query(sql ,(err, result) =>{
+    if(err){
+      return res.status(500).json({ error: 'Server error' });
+    }
+    else{
+      return res.status(200).send(result);
+    }  
+  })
+})
+app.get('/requestno-admin' , (req , res)=>{
+  const sql ='SELECT COUNT(*) as reqNo FROM request WHERE status2 = "Pending";';
 
+  connection.query(sql ,(err, result) =>{
+    if(err){
+      return res.status(500).json({ error: 'Server error' });
+    }
+    else{
+      return res.status(200).send(result);
+    }  
+  })
+})
+
+app.get('/newequipment' , (err ,res) =>{
+  const sql = 'SELECT i.id ,i.name , i.serial_no , i.location FROM item i WHERE DAY(i.date_acquired) = DAY(CURDATE());';
+
+  connection.query(sql ,(err, result) =>{
+    if(err){
+      return res.status(500).json({ error: 'Server error' });
+    }
+    else{
+      return res.status(200).send(result);
+    }  
+  })
+
+})
+
+app.get('/actives' , (err ,res) =>{
+  const sql = 'SELECT COUNT(*) as count FROM item WHERE status = "Active";';
+
+  connection.query(sql ,(err, result) =>{
+    if(err){
+      return res.status(500).json({ error: 'Server error' });
+    }
+ 
+    res.json(result);
+  })
+
+})
+app.get('/defective' , (err ,res) =>{
+  const sql = 'SELECT COUNT(*) as count FROM item WHERE status = "Defective";';
+
+  connection.query(sql ,(err, result) =>{
+    if(err){
+      return res.status(500).json({ error: 'Server error' });
+    }
+    else{
+      return res.status(200).send(result);
+    }  
+  })
+
+})
+app.get('/dispose' , (err ,res) =>{
+  const sql = 'SELECT COUNT(*) as count FROM item WHERE status = "Dispose";';
+
+  connection.query(sql ,(err, result) =>{
+    if(err){
+      return res.status(500).json({ error: 'Server error' });
+    }
+    else{
+      return res.status(200).send(result);
+    }  
+  })
+
+})
+app.get('/donate' , (err ,res) =>{
+  const sql = 'SELECT COUNT(*) as count FROM item WHERE status = "Donate";';
+// app.get('/barChartData' , (req , res) =>{
+//   const sql = "SELECT COUNT(*) AS item_count, MONTH(i.date_acquired) AS month_number, c.name AS item_name FROM item i, category c WHERE i.categoryID = c.id GROUP BY categoryID;"
+
+  // connection.query(sql ,(err, result) =>{
+  //   if(err){
+  //     return res.status(500).json({ error: 'Server error' });
+  //   }
+  //   else{
+  //     return res.status(200).send(result);
+  //   }  
+  // })
   connection.query(sql , (err,result) =>{
     if(err){
       return res.status(500).json({ error: 'Server error' });
@@ -41,6 +127,7 @@ app.get('/barChartData' , (req , res) =>{
     }
   })
 })
+
 
 app.get('/report', async function (req, res){
   connection.query(

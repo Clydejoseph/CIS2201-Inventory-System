@@ -2,25 +2,23 @@ import React, { useState } from 'react'
 
 import '../css/dashboardcss.css'
 
-import {  Card, CardHeader, Divider, HStack,VStack, Heading, Stack, CardBody, StackDivider, Text, Box  } from '@chakra-ui/react'
+import {  Card, CardHeader, Divider, HStack,VStack, Heading, Stack, CardBody, StackDivider, Text, Box, Table  } from '@chakra-ui/react'
 import CardDash from '../component/CardDash'
 import { Equipments } from '../dataExport/EquipmentCounts'
-import BarChart from '../component/charts/BarChart'
 import DashComponent from '../component/DashComponent'
 import { useEffect } from 'react'
 import axios from 'axios'
 import { Bar } from 'react-chartjs-2'
+import NewEquipment from '../component/NewEquipments'
+import PieChart from '../component/charts/PieChart'
 
 function Dashboard() {
 
 
     
-    const activeAcc = sessionStorage.getItem('account') == null ? null : JSON.parse(sessionStorage.getItem('account'));
+    const activeAcc = sessionStorage.getItem('account') == null ? 'default' : JSON.parse(sessionStorage.getItem('account'));
+    const auth = activeAcc.auth;
     const [item , setItem] = useState([]);
-
-    const [barData , setBar] = useState([]);
-    
-    console.log(activeAcc);
 
     useEffect(() =>{
         axios.get('http://localhost:5000/itemcount').then((res) =>{
@@ -29,33 +27,103 @@ function Dashboard() {
             console.log(error);
         })
     },[])
+// ----------------------------------------------------------------------
+    const [req , setreq] = useState('');
 
     useEffect(() =>{
-        axios.get('http://localhost:5000/barChartData').then((res)=>{
-            setBar(res.data);
+        if(auth === 'Head'){
+            axios.get('http://localhost:5000/requestno').then((res) =>{
+            setreq(res.data[0].reqNo);
+            console.log(res.data)
+            }).catch((error) =>{
+                console.log(error);
+            })
+        }else{
+            axios.get('http://localhost:5000/requestno-admin').then((res) =>{
+                setreq(res.data[0].reqNo);
+                console.log(res.data)
+            }).catch((error) =>{
+                console.log(error);
+            })
+        }
+        
+    },[])
+
+// ----------------------------------------------------------------------
+    const [newEquip , setNew] = useState([]);
+
+    useEffect(() =>{
+        axios.get('http://localhost:5000/newequipment').then((res)=>{
+            setNew(res.data);
+            console.log(res.data)
         }).catch((error) =>{
             console.log(error);
         })
-    })
+    },[])
+
+
+
+// ----------------------------------------------------------------------   
+const [active , setactive] = useState('');
+const [defective , setdefective] = useState('');
+const [dispose , setdispose] = useState('');
+const [donate , setdonate] = useState('');
+
+    useEffect(() =>{
+        axios.get('http://localhost:5000/actives').then((res)=>{
+            setactive(res.data[0]);
+        }).catch((error) =>{
+            console.log(error);
+        })
+    },[])
+    useEffect(() =>{
+        axios.get('http://localhost:5000/defective').then((res)=>{
+            setdefective(res.data[0]);
+
+        }).catch((error) =>{
+            console.log(error);
+        })
+    },[])
+    useEffect(() =>{
+        axios.get('http://localhost:5000/dispose').then((res)=>{
+            setdispose(res.data[0]);
+        }).catch((error) =>{
+            console.log(error);
+        })
+    },[])
+    useEffect(() =>{
+        axios.get('http://localhost:5000/donate').then((res)=>{
+            setdonate(res.data[0]);
+        }).catch((error) =>{
+            console.log(error);
+        })
+    },[])
+
     
 
+// ----------------------------------------------------------------------   
   const dash = item.map((elem)=>{return (
     <Box key={elem.id}>
-        <CardDash title={elem.name} count ={elem.count}/>
+        <CardDash orientation={'row'} title={elem.name} count ={elem.count}/>
     </Box>
    )})
 
   return (
     <VStack align={'center'} padding={'0.5rem'}>
-        <HStack flexWrap={'wrap'}>
-           {dash}
-           <CardDash title={'request'} count={5}/>
+        <HStack flexWrap={'wrap'} width={'80%'} justify={'center'} >
+            {dash}
+            {auth.toLowerCase() == 'admin' ? <CardDash orientation={'row'} title={'request'} count={req}/> : null}
+            {auth.toLowerCase() == 'head' ? <CardDash orientation={'row'} title={'request'} count={req}/> : null}
         </HStack>
         
-        <HStack align={'stretch'}>
-        <Card width={'50vw'}>
-            <BarChart />
+        <HStack align={'stretch'} width={'80vw'} >
+        <Card width={'100%'} padding={'5px'} variant={'elevated'}>
+            <Heading color={'black'}>New Equipments</Heading>
+            <NewEquipment data = {newEquip}/>
         </Card>
+        <VStack>
+            <PieChart activeData={active} defectiveData={defective} disposeData={dispose} donateData={donate}/>
+        </VStack>
         </HStack>
     </VStack>
   )
